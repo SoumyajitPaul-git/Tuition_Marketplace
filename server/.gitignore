@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+logs
+*.log
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Firebase credentials
+firebase-key.json
+
+# OS / Editor junk files
+.DS_Store
+Thumbs.db
+
+# Dependency locks (optional, ignore if you don't want lockfiles in repo)
+package-lock.json
+yarn.lock
+
+# Vite, React or Next.js frontend (if nested)
+client/node_modules/
+client/dist/
+client/build/
+
+# Optional: VSCode settings
+.vscode/
