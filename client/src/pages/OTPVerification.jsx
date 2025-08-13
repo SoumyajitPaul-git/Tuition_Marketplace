@@ -8,11 +8,14 @@ import axios from "axios";
 export default function OTPVerification() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const navigate = useNavigate();
 
+  const email = localStorage.getItem("otp_email");
+
   const handleVerify = async () => {
-    const email = localStorage.getItem("otp_email");
     if (!email) return alert("Email not found. Try signing up again.");
+    if (otp.length !== 6) return alert("Please enter a 6-digit OTP");
 
     try {
       setLoading(true);
@@ -22,8 +25,23 @@ export default function OTPVerification() {
       navigate("/profile/basic");
     } catch (err) {
       alert(err.response?.data?.message || "Verification failed");
+      setOtp("");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!email) return alert("Email not found. Try signing up again.");
+
+    try {
+      setResending(true);
+      const res = await axios.post("/api/auth/otp/resend", { email });
+      alert(res.data.message || "OTP resent successfully");
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to resend OTP");
+    } finally {
+      setResending(false);
     }
   };
 
@@ -32,10 +50,19 @@ export default function OTPVerification() {
       <h2 className="text-lg font-semibold mb-4">OTP Verification</h2>
       <p className="mb-2">Enter the OTP sent to your email.</p>
       <Input
-        placeholder="Enter OTP"
+        type="text"
+        inputMode="numeric"
+        autoFocus
+        maxLength={6}
+        pattern="\d{6}"
+        placeholder="Enter 6-digit OTP"
         value={otp}
-        onChange={(e) => setOtp(e.target.value)}
+        onChange={(e) => {
+          const val = e.target.value;
+          if (/^\d{0,6}$/.test(val)) setOtp(val);
+        }}
       />
+
       <Button
         className="mt-4"
         onClick={handleVerify}
@@ -43,6 +70,14 @@ export default function OTPVerification() {
       >
         {loading ? "Verifying..." : "Verify OTP"}
       </Button>
+
+      <button
+        onClick={handleResend}
+        disabled={resending}
+        className="mt-4 text-sm text-primary underline hover:text-primary-dark"
+      >
+        {resending ? "Resending OTP..." : "Resend OTP"}
+      </button>
     </Container>
   );
 }
