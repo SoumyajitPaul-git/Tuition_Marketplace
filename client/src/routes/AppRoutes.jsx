@@ -5,6 +5,7 @@ import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import OTPVerification from "../pages/OTPVerification";
 import BasicInfo from "../pages/TeacherProfileCreation/BasicInfo";
+import Discover from "../pages/Discover";
 import Preference from "../pages/TeacherProfileCreation/Preference";
 // import WelcomeTeacher from "../pages/WelcomeTeacher";
 // import WelcomeParent from "../pages/WelcomeParent";
@@ -24,7 +25,6 @@ export default function AppRoutes() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/otp" element={<OTPVerification />} />
       <Route path="/profile/basic" element={<BasicInfo />} />
-      <Route path="/profile/pref" element={<Preference />} />
       {/* <Route path="/welcome-teacher" element={<WelcomeTeacher />} />
       <Route path="/welcome-parent" element={<WelcomeParent />} />
       <Route path="/profile/basic" element={<StepBasic />} />
