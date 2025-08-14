@@ -32,15 +32,14 @@ export default function SignIn() {
   }, [form]);
 
   const handleSubmit = async () => {
-    try {
+    try { 
       const res = await axios.post("/api/auth/signin", form);
       alert(res.data.message);
-      navigate("/profile/basic"); // ✅ redirect after success
+      navigate("/profile/creation"); // ✅ redirect after success
     } catch (err) {
       alert(err.response?.data?.message || "Sign in failed");
     }
   };
-
 
   return (
     <Container>

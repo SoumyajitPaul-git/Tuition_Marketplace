@@ -1,8 +1,9 @@
 import React from 'react'
+import HeroText from '../components/HeroText'
 
 const Discover = () => {
   return (
-    <div>Discover page for browsing teacher profiles</div>
+    <HeroText>Discover page for browsing teacher profiles (To be implemented)</HeroText>
   )
 }
 
