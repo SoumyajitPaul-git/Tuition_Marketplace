@@ -364,8 +364,8 @@ export default function UploadDocs({ onSave, initialData = {} }) {
         </button>
       </div>
 
-      <Button onClick={handleSave} className="w-full mt-8">
-        Save Documents
+      <Button onClick={handleSave} className="px-4 mt-6 text-md">
+        Save
       </Button>
     </div>
   );

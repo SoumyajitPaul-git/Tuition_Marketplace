@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Button from "../../components/Button";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -18,7 +17,6 @@ export default function Preference({ onSave, initialData = {} }) {
   const [open, setOpen] = useState(false);
   const [areaOpen, setAreaOpen] = useState(false);
 
-  
   const validators = {
     achievement: (val) =>
       val.length > 200 ? "Achievement must be under 200 characters" : "",
@@ -52,7 +50,6 @@ export default function Preference({ onSave, initialData = {} }) {
       }
     });
   };
-
 
   const handleSave = () => {
     const newErrors = {};
@@ -276,8 +273,8 @@ export default function Preference({ onSave, initialData = {} }) {
         </div>
       </div>
 
-      <Button onClick={handleSave} className="w-full mt-6">
-        Save Preferences
+      <Button onClick={handleSave} className="px-4 mt-6 text-md">
+        Save
       </Button>
     </div>
   );
@@ -296,7 +293,7 @@ export default function Preference({ onSave, initialData = {} }) {
 // import axios from "axios";
 
 // export default function Preference(){
-  
+
 //   const [subject, setSubject] = useState([]);
 //   const [area, setArea] = useState([]);
 //   const [isValid, setIsValid] = useState(false);
@@ -330,7 +327,7 @@ export default function Preference({ onSave, initialData = {} }) {
 
 //   return (
 //     <Container>
-//       <HeroText>Preference</HeroText>    
+//       <HeroText>Preference</HeroText>
 //       <MultiSelectDropdown
 //         label="Subjects"
 //         options={subjectOptions}
@@ -373,27 +370,26 @@ export default function Preference({ onSave, initialData = {} }) {
 //                 value={experience}
 //                 onChange={setExperience}
 //                 placeholder="Select Experience"
-//             />  
+//             />
 //       </p>
-      
+
 //       <div>Achievement : </div>
-//       <TextBox 
-//         placeholder="" 
-//         maxLength={200} 
+//       <TextBox
+//         placeholder=""
+//         maxLength={200}
 //         value={achievement}
 //         onChange={(e) => setAchievement(e.target.value)}
 //       />
 //       <div>Outcome : </div>
-//       <TextBox 
-//         placeholder="" 
-//         maxLength={200} 
+//       <TextBox
+//         placeholder=""
+//         maxLength={200}
 //         value={outcome}
 //         onChange={(e) => setOutcome(e.target.value)}
 //       />
-//       <Button Click={handleSubmit} disabled={!isValid}>        
+//       <Button Click={handleSubmit} disabled={!isValid}>
 //         Save
 //       </Button>
-//     </Container>  
+//     </Container>
 //   )
 // }
-
