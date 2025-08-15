@@ -342,7 +342,7 @@ export default function ProfileCreation() {
       </div>
 
       {/* Debug Info (remove in production) */}
-      {process.env.NODE_ENV === "development" && (
+      {/* {process.env.NODE_ENV === "development" && (
         <div className="mt-8 p-4 bg-gray-100 rounded-md text-xs text-gray-600 w-full max-w-3xl">
           <h4 className="font-semibold mb-2">Debug Info:</h4>
           <p>Active Step: {activeStep}</p>
@@ -361,7 +361,7 @@ export default function ProfileCreation() {
             {Object.keys(profileData.uploadedFiles).length > 0 ? "Yes" : "No"}
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

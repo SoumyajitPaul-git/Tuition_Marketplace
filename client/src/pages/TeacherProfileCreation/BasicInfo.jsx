@@ -182,7 +182,7 @@ export default function BasicInfo(){
   };
 
   return (
-    <Container>
+    <>
       <HeroText>Basic Information</HeroText>
       <Input 
         name={"name"}
@@ -224,7 +224,7 @@ export default function BasicInfo(){
       <Button Click={handleSubmit} disabled={!isValid}>        
         Save
       </Button>
-    </Container>
+    </>
   )
 }
 

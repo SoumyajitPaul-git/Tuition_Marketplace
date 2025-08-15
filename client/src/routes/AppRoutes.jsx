@@ -34,6 +34,8 @@ export default function AppRoutes() {
       <Route path="/profile/creation" element={<ProfileCreation />} />
 
       <Route path="/profile/basic" element={<BasicInfo />} />
+      <Route path="/profile/preference" element={<Preference />} />
+      
 
       {/* <Route path="/welcome-teacher" element={<WelcomeTeacher />} />
       <Route path="/welcome-parent" element={<WelcomeParent />} />
