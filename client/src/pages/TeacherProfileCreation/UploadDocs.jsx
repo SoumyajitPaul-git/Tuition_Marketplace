@@ -313,26 +313,26 @@ export default function UploadDocs({ onSave, initialData = {} }) {
         accept="application/pdf,image/*"
       />
 
-      <FileUploadArea
+      {/* <FileUploadArea
         fieldName="additionalMarksheets"
         label="Additional Mark-sheets"
         accept="application/pdf,image/*"
         multiple={true}
-      />
+      /> */}
 
-      <FileUploadArea
+      {/* <FileUploadArea
         fieldName="professionalCertificates"
         label="Professional Certificates"
         accept="application/pdf,image/*"
         multiple={true}
-      />
+      /> */}
 
-      <FileUploadArea
+      {/* <FileUploadArea
         fieldName="vocationalCertificates"
         label="Vocational Certificates"
         accept="application/pdf,image/*"
         multiple={true}
-      />
+      /> */}
 
       {/* Add more buttons */}
       <div className="space-y-3 border-t pt-4">
