@@ -174,9 +174,9 @@ export default function ProfileCreation() {
     setActiveStep(stepIndex);
   }
 
-  function handleGoBack() {
-    console.log("Go back clicked");
-  }
+  // function handleGoBack() {
+  //   console.log("Go back clicked");
+  // }
 
   const completionPercentage = Math.round(
     (completedSteps.size / steps.length) * 100
@@ -185,7 +185,7 @@ export default function ProfileCreation() {
   return (
     <div className="min-h-screen bg-white mb-4 flex flex-col items-center">
       {/* ✅ Reusable Top Navigation Bar */}
-      <TopNavBar onGoBack={handleGoBack} />
+      <TopNavBar />
 
       {/* Title */}
       <HeroText className="text-3xl">

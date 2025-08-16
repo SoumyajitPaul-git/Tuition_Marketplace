@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "../../components/Button";
+import FileUploadArea from "../../components/FileUploadArea";
 
 export default function UploadDocs({ onSave, initialData = {} }) {
   const [uploadedFiles, setUploadedFiles] = useState({
@@ -12,8 +13,8 @@ export default function UploadDocs({ onSave, initialData = {} }) {
     ...initialData,
   });
 
-  const [uploadProgress, setUploadProgress] = useState({});
   const [errors, setErrors] = useState({});
+  const [uploadProgress, setUploadProgress] = useState({});
 
   const handleFileUpload = async (fieldName, file) => {
     if (!file) return;
@@ -51,7 +52,6 @@ export default function UploadDocs({ onSave, initialData = {} }) {
     // Simulate upload progress (replace with actual upload logic)
     setUploadProgress((prev) => ({ ...prev, [fieldName]: 0 }));
 
-    // Simulate upload progress
     for (let i = 0; i <= 100; i += 10) {
       await new Promise((resolve) => setTimeout(resolve, 100));
       setUploadProgress((prev) => ({ ...prev, [fieldName]: i }));
@@ -86,7 +86,7 @@ export default function UploadDocs({ onSave, initialData = {} }) {
             name: file.name,
             size: file.size,
             uploadedAt: new Date().toISOString(),
-            id: Date.now() + Math.random(), // Simple ID generation
+            id: Date.now() + Math.random(),
           },
         ],
       }));
@@ -95,13 +95,11 @@ export default function UploadDocs({ onSave, initialData = {} }) {
 
   const removeFile = (fieldName, fileId = null) => {
     if (fileId) {
-      // Remove from array
       setUploadedFiles((prev) => ({
         ...prev,
         [fieldName]: prev[fieldName].filter((file) => file.id !== fileId),
       }));
     } else {
-      // Remove single file
       setUploadedFiles((prev) => ({
         ...prev,
         [fieldName]: null,
@@ -110,7 +108,6 @@ export default function UploadDocs({ onSave, initialData = {} }) {
   };
 
   const handleSave = () => {
-    // Validate required uploads if needed
     const requiredFields = ["profileImage", "secondaryMarksheet"];
     const missingFields = requiredFields.filter(
       (field) => !uploadedFiles[field]
@@ -125,7 +122,6 @@ export default function UploadDocs({ onSave, initialData = {} }) {
       return;
     }
 
-    // Call parent's save function
     if (onSave) {
       onSave(uploadedFiles);
     }
@@ -139,158 +135,6 @@ export default function UploadDocs({ onSave, initialData = {} }) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const FileUploadArea = ({
-    fieldName,
-    label,
-    accept = "image/*,application/pdf",
-    required = false,
-    multiple = false,
-  }) => (
-    <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#42D4BC] transition-colors">
-        <input
-          type="file"
-          accept={accept}
-          multiple={multiple}
-          onChange={(e) => {
-            const files = e.target.files;
-            if (files.length > 0) {
-              if (multiple) {
-                handleMultipleFileUpload(fieldName, files);
-              } else {
-                handleFileUpload(fieldName, files[0]);
-              }
-            }
-          }}
-          className="hidden"
-          id={fieldName}
-        />
-
-        <label
-          htmlFor={fieldName}
-          className="cursor-pointer flex flex-col items-center"
-        >
-          <svg
-            className="w-12 h-12 text-gray-400 mb-3"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            />
-          </svg>
-          <span className="text-gray-600">
-            Click to upload or drag and drop
-          </span>
-          <span className="text-xs text-gray-500 mt-1">
-            PDF, JPEG, PNG (Max 5MB)
-          </span>
-        </label>
-
-        {uploadProgress[fieldName] !== null &&
-          uploadProgress[fieldName] !== undefined && (
-            <div className="mt-4">
-              <div className="bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-[#42D4BC] h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${uploadProgress[fieldName]}%` }}
-                ></div>
-              </div>
-              <span className="text-xs text-gray-500 mt-1">
-                Uploading... {uploadProgress[fieldName]}%
-              </span>
-            </div>
-          )}
-      </div>
-
-      {errors[fieldName] && (
-        <p className="text-red-500 text-xs mt-1">{errors[fieldName]}</p>
-      )}
-
-      {/* Display uploaded file(s) */}
-      {uploadedFiles[fieldName] && !Array.isArray(uploadedFiles[fieldName]) && (
-        <div className="mt-3 p-3 bg-green-50 rounded-lg flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <svg
-              className="w-8 h-8 text-green-600"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-            </svg>
-            <div>
-              <p className="text-sm font-medium text-gray-900">
-                {uploadedFiles[fieldName].name}
-              </p>
-              <p className="text-xs text-gray-500">
-                {formatFileSize(uploadedFiles[fieldName].size)}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => removeFile(fieldName)}
-            className="text-red-600 hover:text-red-800"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
-            </svg>
-          </button>
-        </div>
-      )}
-
-      {/* Display multiple uploaded files */}
-      {Array.isArray(uploadedFiles[fieldName]) &&
-        uploadedFiles[fieldName].length > 0 && (
-          <div className="mt-3 space-y-2">
-            {uploadedFiles[fieldName].map((file) => (
-              <div
-                key={file.id}
-                className="p-3 bg-green-50 rounded-lg flex items-center justify-between"
-              >
-                <div className="flex items-center space-x-3">
-                  <svg
-                    className="w-8 h-8 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-                  </svg>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {file.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {formatFileSize(file.size)}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => removeFile(fieldName, file.id)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-    </div>
-  );
-
   return (
     <div className="space-y-6">
       <FileUploadArea
@@ -298,6 +142,13 @@ export default function UploadDocs({ onSave, initialData = {} }) {
         label="Upload Profile Image"
         accept="image/*"
         required={true}
+        uploadedFiles={uploadedFiles}
+        errors={errors}
+        uploadProgress={uploadProgress}
+        handleFileUpload={handleFileUpload}
+        handleMultipleFileUpload={handleMultipleFileUpload}
+        removeFile={removeFile}
+        formatFileSize={formatFileSize}
       />
 
       <FileUploadArea
@@ -305,36 +156,74 @@ export default function UploadDocs({ onSave, initialData = {} }) {
         label="Upload Secondary Mark-sheet"
         accept="application/pdf,image/*"
         required={true}
+        uploadedFiles={uploadedFiles}
+        errors={errors}
+        uploadProgress={uploadProgress}
+        handleFileUpload={handleFileUpload}
+        handleMultipleFileUpload={handleMultipleFileUpload}
+        removeFile={removeFile}
+        formatFileSize={formatFileSize}
       />
 
       <FileUploadArea
         fieldName="higherSecondaryMarksheet"
         label="Upload Higher Secondary Mark-sheet"
         accept="application/pdf,image/*"
+        uploadedFiles={uploadedFiles}
+        errors={errors}
+        uploadProgress={uploadProgress}
+        handleFileUpload={handleFileUpload}
+        handleMultipleFileUpload={handleMultipleFileUpload}
+        removeFile={removeFile}
+        formatFileSize={formatFileSize}
       />
 
-      {/* <FileUploadArea
+      {/* Hidden inputs for add-more buttons */}
+      <FileUploadArea
         fieldName="additionalMarksheets"
         label="Additional Mark-sheets"
         accept="application/pdf,image/*"
         multiple={true}
-      /> */}
+        uploadedFiles={uploadedFiles}
+        errors={errors}
+        uploadProgress={uploadProgress}
+        handleFileUpload={handleFileUpload}
+        handleMultipleFileUpload={handleMultipleFileUpload}
+        removeFile={removeFile}
+        formatFileSize={formatFileSize}
+        className="hidden"
+      />
 
-      {/* <FileUploadArea
+      <FileUploadArea
         fieldName="professionalCertificates"
         label="Professional Certificates"
         accept="application/pdf,image/*"
         multiple={true}
-      /> */}
+        uploadedFiles={uploadedFiles}
+        errors={errors}
+        uploadProgress={uploadProgress}
+        handleFileUpload={handleFileUpload}
+        handleMultipleFileUpload={handleMultipleFileUpload}
+        removeFile={removeFile}
+        formatFileSize={formatFileSize}
+        className="hidden"
+      />
 
-      {/* <FileUploadArea
+      <FileUploadArea
         fieldName="vocationalCertificates"
         label="Vocational Certificates"
         accept="application/pdf,image/*"
         multiple={true}
-      /> */}
+        uploadedFiles={uploadedFiles}
+        errors={errors}
+        uploadProgress={uploadProgress}
+        handleFileUpload={handleFileUpload}
+        handleMultipleFileUpload={handleMultipleFileUpload}
+        removeFile={removeFile}
+        formatFileSize={formatFileSize}
+        className="hidden"
+      />
 
-      {/* Add more buttons */}
       <div className="space-y-3 border-t pt-4">
         <button
           onClick={() =>
