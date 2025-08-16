@@ -336,7 +336,7 @@ export default function Summary({ profileData = {}, onSubmit }) {
         <Button
           onClick={handleSubmitForValidation}
           disabled={isSubmitting || uploadedDocs.length === 0}
-          className={`w-full py-3 text-lg font-semibold ${
+          className={`py-3 text-sm font-semibold ${
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

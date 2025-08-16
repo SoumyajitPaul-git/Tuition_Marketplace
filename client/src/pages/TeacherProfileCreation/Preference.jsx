@@ -116,7 +116,7 @@ export default function Preference({ onSave, initialData = {} }) {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-fit ">
       <div className="relative">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Subject ? <span className="text-red-500">*</span>

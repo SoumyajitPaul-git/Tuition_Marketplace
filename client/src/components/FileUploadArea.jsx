@@ -19,7 +19,7 @@ const FileUploadArea = ({
         {label} {required && <span className="text-red-500">*</span>}
       </label>
 
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#42D4BC] transition-colors">
+      <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-center hover:border-[#42D4BC] transition-colors">
         <input
           type="file"
           accept={accept}
@@ -43,7 +43,7 @@ const FileUploadArea = ({
           className="cursor-pointer flex flex-col items-center"
         >
           <svg
-            className="w-12 h-12 text-gray-400 mb-3"
+            className="w-12 h-6 text-gray-400 mb-3"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

@@ -183,33 +183,34 @@ export default function ProfileCreation() {
   );
 
   return (
-    <div className="min-h-screen bg-white mb-4 flex flex-col items-center">
+    <div className="min-h-screen bg-white mb-4 flex flex-col items-center m-0">
       {/* ✅ Reusable Top Navigation Bar */}
       <TopNavBar />
 
-      {/* Title */}
-      <HeroText className="text-3xl">
-        {activeStep === 3 ? "Profile Summary" : "Profile Creation"}
-      </HeroText>
+      <div className="flex flex-col items-center m-2">
+        {/* Title */}
+        <HeroText className="text-3xl">
+          {activeStep === 3 ? "Profile Summary" : "Profile Creation"}
+        </HeroText>
 
-      {/* Progress Info */}
-      <div className="text-center mb-4">
-        <div className="text-sm text-gray-600">
-          Step {activeStep + 1} of {steps.length} • {completionPercentage}%
-          Complete
-        </div>
-      </div>
+        {/* Progress Info */}
+        {/* <div className="text-center mb-4">
+          <div className="text-sm text-gray-600">
+            Step {activeStep + 1} of {steps.length} • {completionPercentage}%
+            Complete
+          </div>
+        </div> */}
 
-      {/* Step Indicator */}
-      <div className="flex justify-center gap-2 mb-4">
-        {steps.map((_, idx) => (
-          <div key={idx} className="relative">
-            <span
-              className={`h-2 w-6 rounded-full transition-colors duration-200 block ${
-                idx <= activeStep ? "bg-green-500" : "bg-gray-300"
-              }`}
-            />
-            {completedSteps.has(idx) && idx !== activeStep && (
+        {/* Step Indicator */}
+        <div className="flex justify-center gap-2 mb-4">
+          {steps.map((_, idx) => (
+            <div key={idx} className="relative">
+              <span
+                className={`h-2 w-6 rounded-full transition-colors duration-200 block ${
+                  idx <= activeStep ? "bg-green-500" : "bg-gray-300"
+                }`}
+              />
+              {/* {completedSteps.has(idx) && idx !== activeStep && (
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-600 rounded-full flex items-center justify-center">
                 <svg
                   className="w-2 h-2 text-white"
@@ -219,62 +220,63 @@ export default function ProfileCreation() {
                   <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
                 </svg>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
+            )} */}
+            </div>
+          ))}
+        </div>
 
-      {/* Step Buttons */}
-      <div className="flex justify-center gap-2 mb-6 flex-wrap">
-        {steps.map((step, idx) => (
-          <button
-            key={idx}
-            className={`px-4 py-2 rounded-md text-sm font-semibold transition-all duration-200 relative ${
-              activeStep === idx
-                ? "bg-[#42D4BC] text-black shadow-md"
-                : completedSteps.has(idx)
-                ? "bg-green-100 text-green-800 hover:bg-green-200"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-            onClick={() => handleStepClick(idx)}
-          >
-            {step.label}
-            {completedSteps.has(idx) && (
+        {/* Step Buttons */}
+        <div className="flex justify-center gap-2 mb-6 flex-wrap">
+          {steps.map((step, idx) => (
+            <button
+              key={idx}
+              className={`px-4 py-2 rounded-md text-sm font-semibold transition-all duration-200 relative ${
+                activeStep === idx
+                  ? "bg-[#42D4BC] text-black shadow-md"
+                  : completedSteps.has(idx)
+                  ? "bg-green-100 text-green-800 hover:bg-green-200"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+              onClick={() => handleStepClick(idx)}
+            >
+              {step.label}
+              {/* {completedSteps.has(idx) && (
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></span>
-            )}
-          </button>
-        ))}
-      </div>
+            )} */}
+            </button>
+          ))}
+        </div>
 
-      {/* Step Content */}
-      <div className="w-full max-w-3xl  rounded-xl shadow-md p-6">
-        <div className="min-h-[400px]">{steps[activeStep].component}</div>
-      </div>
+        {/* Step Content */}
+        <div className="w-full  rounded-xl shadow-md p-6">
+          <div className="min-h-[400px]">{steps[activeStep].component}</div>
+        </div>
 
-      {/* Navigation Buttons */}
-      <div className="flex justify-between w-full max-w-3xl mt-6">
-        <button
-          onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
-          disabled={activeStep === 0}
-          className={`px-6 py-2 rounded-md font-medium transition-colors ${
-            activeStep === 0
-              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-              : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-          }`}
-        >
-          Previous
-        </button>
-
-        {activeStep < steps.length - 1 && (
+        {/* Navigation Buttons */}
+        {/* <div className="flex justify-between w-full max-w-3xl mt-6">
           <button
-            onClick={() =>
-              setActiveStep(Math.min(steps.length - 1, activeStep + 1))
-            }
-            className="px-6 py-2 rounded-md font-medium bg-[#42D4BC] text-black hover:bg-[#35b4a6] transition-colors"
+            onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
+            disabled={activeStep === 0}
+            className={`px-6 py-2 rounded-md font-medium transition-colors ${
+              activeStep === 0
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+            }`}
           >
-            Next
+            Previous
           </button>
-        )}
+
+          {activeStep < steps.length - 1 && (
+            <button
+              onClick={() =>
+                setActiveStep(Math.min(steps.length - 1, activeStep + 1))
+              }
+              className="px-6 py-2 rounded-md font-medium bg-[#42D4BC] text-black hover:bg-[#35b4a6] transition-colors"
+            >
+              Next
+            </button>
+          )}
+        </div> */}
       </div>
     </div>
   );

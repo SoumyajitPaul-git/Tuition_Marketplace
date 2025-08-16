@@ -73,7 +73,7 @@ export default function BasicInfo({ onSave, initialData = {} }) {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-fit">
       <Input
         name="name"
         placeholder="Enter your full name"

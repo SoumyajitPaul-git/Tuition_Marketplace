@@ -13,6 +13,12 @@ export default function UploadDocs({ onSave, initialData = {} }) {
     ...initialData,
   });
 
+  const [visibleSections, setVisibleSections] = useState({
+    additionalMarksheets: false,
+    professionalCertificates: false,
+    vocationalCertificates: false,
+  });
+
   const [errors, setErrors] = useState({});
   const [uploadProgress, setUploadProgress] = useState({});
 
@@ -179,55 +185,61 @@ export default function UploadDocs({ onSave, initialData = {} }) {
       />
 
       {/* Hidden inputs for add-more buttons */}
-      <FileUploadArea
-        fieldName="additionalMarksheets"
-        label="Additional Mark-sheets"
-        accept="application/pdf,image/*"
-        multiple={true}
-        uploadedFiles={uploadedFiles}
-        errors={errors}
-        uploadProgress={uploadProgress}
-        handleFileUpload={handleFileUpload}
-        handleMultipleFileUpload={handleMultipleFileUpload}
-        removeFile={removeFile}
-        formatFileSize={formatFileSize}
-        className="hidden"
-      />
+      {visibleSections.additionalMarksheets && (
+        <FileUploadArea
+          fieldName="additionalMarksheets"
+          label="Additional Mark-sheets"
+          accept="application/pdf,image/*"
+          multiple={true}
+          uploadedFiles={uploadedFiles}
+          errors={errors}
+          uploadProgress={uploadProgress}
+          handleFileUpload={handleFileUpload}
+          handleMultipleFileUpload={handleMultipleFileUpload}
+          removeFile={removeFile}
+          formatFileSize={formatFileSize}
+        />
+      )}
 
-      <FileUploadArea
-        fieldName="professionalCertificates"
-        label="Professional Certificates"
-        accept="application/pdf,image/*"
-        multiple={true}
-        uploadedFiles={uploadedFiles}
-        errors={errors}
-        uploadProgress={uploadProgress}
-        handleFileUpload={handleFileUpload}
-        handleMultipleFileUpload={handleMultipleFileUpload}
-        removeFile={removeFile}
-        formatFileSize={formatFileSize}
-        className="hidden"
-      />
+      {visibleSections.professionalCertificates && (
+        <FileUploadArea
+          fieldName="professionalCertificates"
+          label="Professional Certificates"
+          accept="application/pdf,image/*"
+          multiple={true}
+          uploadedFiles={uploadedFiles}
+          errors={errors}
+          uploadProgress={uploadProgress}
+          handleFileUpload={handleFileUpload}
+          handleMultipleFileUpload={handleMultipleFileUpload}
+          removeFile={removeFile}
+          formatFileSize={formatFileSize}
+        />
+      )}
 
-      <FileUploadArea
-        fieldName="vocationalCertificates"
-        label="Vocational Certificates"
-        accept="application/pdf,image/*"
-        multiple={true}
-        uploadedFiles={uploadedFiles}
-        errors={errors}
-        uploadProgress={uploadProgress}
-        handleFileUpload={handleFileUpload}
-        handleMultipleFileUpload={handleMultipleFileUpload}
-        removeFile={removeFile}
-        formatFileSize={formatFileSize}
-        className="hidden"
-      />
+      {visibleSections.vocationalCertificates && (
+        <FileUploadArea
+          fieldName="vocationalCertificates"
+          label="Vocational Certificates"
+          accept="application/pdf,image/*"
+          multiple={true}
+          uploadedFiles={uploadedFiles}
+          errors={errors}
+          uploadProgress={uploadProgress}
+          handleFileUpload={handleFileUpload}
+          handleMultipleFileUpload={handleMultipleFileUpload}
+          removeFile={removeFile}
+          formatFileSize={formatFileSize}
+        />
+      )}
 
       <div className="space-y-3 border-t pt-4">
         <button
           onClick={() =>
-            document.getElementById("additionalMarksheets").click()
+            setVisibleSections((prev) => ({
+              ...prev,
+              additionalMarksheets: true,
+            }))
           }
           className="flex items-center text-[#42D4BC] hover:text-[#35b4a6] font-medium transition-colors"
         >
@@ -236,7 +248,10 @@ export default function UploadDocs({ onSave, initialData = {} }) {
 
         <button
           onClick={() =>
-            document.getElementById("professionalCertificates").click()
+            setVisibleSections((prev) => ({
+              ...prev,
+              professionalCertificates: true,
+            }))
           }
           className="flex items-center text-[#42D4BC] hover:text-[#35b4a6] font-medium transition-colors"
         >
@@ -245,7 +260,10 @@ export default function UploadDocs({ onSave, initialData = {} }) {
 
         <button
           onClick={() =>
-            document.getElementById("vocationalCertificates").click()
+            setVisibleSections((prev) => ({
+              ...prev,
+              vocationalCertificates: true,
+            }))
           }
           className="flex items-center text-[#42D4BC] hover:text-[#35b4a6] font-medium transition-colors"
         >
