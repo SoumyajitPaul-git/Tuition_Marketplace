@@ -55,6 +55,15 @@ export default function UploadDocs({ onSave, initialData = {} }) {
       [fieldName]: "",
     }));
 
+    // ✅ Auto-toggle visibility if optional section is being uploaded
+    if (
+      fieldName === "additionalMarksheets" ||
+      fieldName === "professionalCertificates" ||
+      fieldName === "vocationalCertificates"
+    ) {
+      setVisibleSections((prev) => ({ ...prev, [fieldName]: true }));
+    }
+
     // Simulate upload progress (replace with actual upload logic)
     setUploadProgress((prev) => ({ ...prev, [fieldName]: 0 }));
 
@@ -79,6 +88,15 @@ export default function UploadDocs({ onSave, initialData = {} }) {
 
   const handleMultipleFileUpload = async (fieldName, files) => {
     const fileArray = Array.from(files);
+
+    // ✅ Auto-toggle visibility for multiple upload sections
+    if (
+      fieldName === "additionalMarksheets" ||
+      fieldName === "professionalCertificates" ||
+      fieldName === "vocationalCertificates"
+    ) {
+      setVisibleSections((prev) => ({ ...prev, [fieldName]: true }));
+    }
 
     for (const file of fileArray) {
       await handleFileUpload(`${fieldName}_temp`, file);
@@ -184,7 +202,6 @@ export default function UploadDocs({ onSave, initialData = {} }) {
         formatFileSize={formatFileSize}
       />
 
-      {/* Hidden inputs for add-more buttons */}
       {visibleSections.additionalMarksheets && (
         <FileUploadArea
           fieldName="additionalMarksheets"

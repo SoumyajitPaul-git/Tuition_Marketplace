@@ -1,4 +1,4 @@
-const { db } = require("../firebase");
+const { db } = require("../firebase/firebaseAdmin");
 
 // Save or update profile
 exports.saveProfile = async (req, res) => {

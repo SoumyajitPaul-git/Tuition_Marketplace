@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import HeroText from "../../components/HeroText";
 import TopNavBar from "../../components/TopNavBar"; // NEW
-import { FaCog } from "react-icons/fa";
-import { IoIosSettings } from "react-icons/io";
+// import { FaCog } from "react-icons/fa";
+// import { IoIosSettings } from "react-icons/io";
 
 // Import your 4 step components
 import BasicInfo from "./BasicInfo";
@@ -138,7 +138,23 @@ export default function ProfileCreation() {
 
   async function handleFinalSubmit(finalData) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await fetch(
+        "http://localhost:5000/api/profiles/submit",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(finalData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to submit profile");
+      }
+
+      const result = await response.json();
+
       setProfileData((prev) => ({
         ...prev,
         isComplete: true,
@@ -146,10 +162,13 @@ export default function ProfileCreation() {
       }));
       setCompletedSteps((prev) => new Set([...prev, 3]));
       localStorage.removeItem("profileCreationData");
-      showSuccessMessage("Profile submitted for validation successfully!");
+
+      showSuccessMessage(
+        result.message || "Profile submitted for validation successfully!"
+      );
     } catch (error) {
       console.error("Submission error:", error);
-      throw error;
+      alert("Failed to submit profile. Please try again.");
     }
   }
 
@@ -178,9 +197,9 @@ export default function ProfileCreation() {
   //   console.log("Go back clicked");
   // }
 
-  const completionPercentage = Math.round(
-    (completedSteps.size / steps.length) * 100
-  );
+  // const completionPercentage = Math.round(
+  //   (completedSteps.size / steps.length) * 100
+  // );
 
   return (
     <div className="min-h-screen bg-white mb-4 flex flex-col items-center m-0">
