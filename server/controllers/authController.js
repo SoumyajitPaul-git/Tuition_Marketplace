@@ -1,5 +1,8 @@
 const { db } = require("../firebase/firebaseAdmin");
 const sendOTPEmail = require("../utils/sendOTPEmail");
+const jwt = require("jsonwebtoken");
+
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 const generateOTP = () =>
   Math.floor(100000 + Math.random() * 900000).toString();
@@ -62,7 +65,7 @@ exports.verifyOTP = async (req, res) => {
   if (data.otp !== otp)
     return res.status(400).json({ success: false, message: "Invalid OTP" });
 
-  await db.collection("users").add({
+  const userRef = await db.collection("users").add({
     name: data.name,
     email: data.email,
     password: data.password,
@@ -71,11 +74,22 @@ exports.verifyOTP = async (req, res) => {
 
   await docRef.delete();
 
-  res
-    .status(200)
-    .json({ success: true, message: "OTP verified. Signup complete." });
-};
+  // Issue JWT
+  const token = jwt.sign(
+    { userId: userRef.id, email: data.email },
+    JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
 
+  res.status(200).json({
+    success: true,
+    message: "OTP verified. Signup complete.",
+    token,
+    userId: userRef.id,
+  });
+};
 
 // 🔁 RESEND OTP
 exports.resendOTP = async (req, res) => {
@@ -91,11 +105,10 @@ exports.resendOTP = async (req, res) => {
     const snapshot = await docRef.get();
 
     if (!snapshot.exists)
-      return res
-        .status(404)
-        .json({ success: false, message: "No OTP request found. Please sign up again." });
-
-    const data = snapshot.data();
+      return res.status(404).json({
+        success: false,
+        message: "No OTP request found. Please sign up again.",
+      });
 
     const otp = generateOTP();
 
@@ -107,14 +120,14 @@ exports.resendOTP = async (req, res) => {
 
     await sendOTPEmail(email, otp);
 
-    res.status(200).json({ success: true, message: "OTP resent to your email." });
+    res
+      .status(200)
+      .json({ success: true, message: "OTP resent to your email." });
   } catch (err) {
     console.error("Resend OTP error:", err);
     res.status(500).json({ success: false, message: "Failed to resend OTP" });
   }
 };
-
-
 
 // 🔐 SIGNIN
 exports.signin = async (req, res) => {
@@ -128,12 +141,27 @@ exports.signin = async (req, res) => {
   if (snapshot.empty)
     return res.status(404).json({ success: false, message: "User not found" });
 
-  const user = snapshot.docs[0].data();
+  const userDoc = snapshot.docs[0];
+  const user = userDoc.data();
 
   if (user.password !== password)
     return res
       .status(401)
       .json({ success: false, message: "Invalid credentials" });
 
-  res.status(200).json({ success: true, message: "Signin successful" });
+  // Issue JWT
+  const token = jwt.sign(
+    { userId: userDoc.id, email: user.email },
+    JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Signin successful",
+    token,
+    userId: userDoc.id,
+  });
 };

@@ -3,7 +3,7 @@ const { db } = require("../firebase/firebaseAdmin");
 // Save or update profile
 exports.saveProfile = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.userId; // ✅ from JWT
     const profileData = req.body;
 
     if (!userId) {
@@ -28,7 +28,7 @@ exports.saveProfile = async (req, res) => {
 // Fetch profile
 exports.getProfile = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.userId; // ✅ from JWT
     const doc = await db.collection("users").doc(userId).get();
 
     if (!doc.exists) {
