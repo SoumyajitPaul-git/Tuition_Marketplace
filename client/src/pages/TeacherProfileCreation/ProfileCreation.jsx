@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import HeroText from "../../components/HeroText";
-import TopNavBar from "../../components/TopNavBar"; // NEW
+import TopNavBar from "../../components/TopNavBar"; 
+import axios from "axios";
 // import { FaCog } from "react-icons/fa";
 // import { IoIosSettings } from "react-icons/io";
 
@@ -136,41 +137,42 @@ export default function ProfileCreation() {
     showSuccessMessage("Documents uploaded successfully!");
   }
 
-  async function handleFinalSubmit(finalData) {
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/profiles/submit",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(finalData),
-        }
-      );
+ 
 
-      if (!response.ok) {
-        throw new Error("Failed to submit profile");
-      }
+ async function handleFinalSubmit(finalData) {
+   try {
+     const res = await axios.post(
+       "/api/profile", // ✅ backend route
+       finalData,
+       {
+         headers: {
+           Authorization: `Bearer ${localStorage.getItem("token")}`, // attach JWT
+         },
+       }
+     );
 
-      const result = await response.json();
+     setProfileData((prev) => ({
+       ...prev,
+       isComplete: true,
+       submittedAt: new Date().toISOString(),
+     }));
 
-      setProfileData((prev) => ({
-        ...prev,
-        isComplete: true,
-        submittedAt: new Date().toISOString(),
-      }));
-      setCompletedSteps((prev) => new Set([...prev, 3]));
-      localStorage.removeItem("profileCreationData");
+     setCompletedSteps((prev) => new Set([...prev, 3]));
+     localStorage.removeItem("profileCreationData");
 
-      showSuccessMessage(
-        result.message || "Profile submitted for validation successfully!"
-      );
-    } catch (error) {
-      console.error("Submission error:", error);
-      alert("Failed to submit profile. Please try again.");
-    }
-  }
+     showSuccessMessage(
+       res.data.message || "Profile submitted for validation successfully!"
+     );
+   } catch (error) {
+     console.error("Submission error:", error);
+     alert(
+       error.response?.data?.message ||
+         "Failed to submit profile. Please try again."
+     );
+   }
+ }
+
+
 
   function showSuccessMessage(message) {
     const toast = document.createElement("div");
