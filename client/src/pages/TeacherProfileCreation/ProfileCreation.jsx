@@ -141,15 +141,13 @@ export default function ProfileCreation() {
 
  async function handleFinalSubmit(finalData) {
    try {
-     const res = await axios.post(
-       "/api/profile", // ✅ backend route
-       finalData,
-       {
-         headers: {
-           Authorization: `Bearer ${localStorage.getItem("token")}`, // attach JWT
-         },
-       }
-     );
+     const token = localStorage.getItem("token");
+
+     const res = await axios.post("/api/profile", finalData, {
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     });
 
      setProfileData((prev) => ({
        ...prev,
