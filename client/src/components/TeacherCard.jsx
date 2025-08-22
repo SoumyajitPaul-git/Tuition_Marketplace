@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "./Button";
 
 const TeacherCard = ({ teacher }) => {
   return (
@@ -11,9 +12,8 @@ const TeacherCard = ({ teacher }) => {
       <h3 className="text-lg font-semibold text-gray-800">{teacher.name}</h3>
       <p className="text-sm text-gray-600">{teacher.subject}</p>
       <p className="text-xs text-gray-500">{teacher.experience} yrs exp</p>
-      <button className="mt-3 px-4 py-2 bg-green-500 text-white text-sm rounded-xl hover:bg-green-600">
-        View Profile
-      </button>
+      
+      <Button className="m-2">View Profile</Button>
     </div>
   );
 };
