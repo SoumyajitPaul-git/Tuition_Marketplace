@@ -25,9 +25,17 @@ export default function Summary({ profileData = {}, onSubmit }) {
 
   // Get profile image URL or placeholder
   const getProfileImageUrl = () => {
-    if (profileData.uploadedFiles?.profileImage?.file) {
-      return URL.createObjectURL(profileData.uploadedFiles.profileImage.file);
+    const file = profileData.uploadedFiles?.profileImage?.file;
+
+    if (file instanceof File || file instanceof Blob) {
+      return URL.createObjectURL(file);
     }
+
+    // If you already stored a URL (from backend)
+    if (typeof profileData.uploadedFiles?.profileImage?.url === "string") {
+      return profileData.uploadedFiles.profileImage.url;
+    }
+
     return "https://via.placeholder.com/80x80?text=Profile";
   };
 
@@ -336,7 +344,7 @@ export default function Summary({ profileData = {}, onSubmit }) {
         <Button
           onClick={handleSubmitForValidation}
           disabled={isSubmitting || uploadedDocs.length === 0}
-          className={`w-full py-3 text-lg font-semibold ${
+          className={`py-3 text-sm font-semibold ${
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

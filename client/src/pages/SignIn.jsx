@@ -32,14 +32,22 @@ export default function SignIn() {
   }, [form]);
 
   const handleSubmit = async () => {
-    try { 
+    try {
       const res = await axios.post("/api/auth/signin", form);
+
+      // ✅ Save token & userId in localStorage for later use
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userId", res.data.userId);
+
       alert(res.data.message);
-      navigate("/profile/creation"); // ✅ redirect after success
+
+      // ✅ redirect after success
+      navigate("/profile/creation");
     } catch (err) {
       alert(err.response?.data?.message || "Sign in failed");
     }
   };
+
 
   return (
     <Container>

@@ -5,7 +5,7 @@ const {
   verifyOTP,
   resendOTP,
 } = require("../controllers/authController");
-
+ 
 
 const router = express.Router();
 
