@@ -10,6 +10,8 @@ import Discover from "../pages/Discover";
 import ProfileCreation from "../pages/TeacherProfileCreation/ProfileCreation";
 
 import Preference from "../pages/TeacherProfileCreation/Preference";
+import Summary from "../pages/TeacherProfileCreation/Summary";
+import UploadDocs from "../pages/TeacherProfileCreation/UploadDocs";
 
 // import WelcomeTeacher from "../pages/WelcomeTeacher";
 // import WelcomeParent from "../pages/WelcomeParent";
@@ -34,6 +36,9 @@ export default function AppRoutes() {
       <Route path="/profile/creation" element={<ProfileCreation />} />
 
       <Route path="/profile/basic" element={<BasicInfo />} />
+      <Route path="/profile/pref" element={<Preference />} />
+      <Route path="/profile/summary" element={<Summary />} />
+      <Route path="/profile/docs" element={<UploadDocs />} />
 
       {/* <Route path="/welcome-teacher" element={<WelcomeTeacher />} />
       <Route path="/welcome-parent" element={<WelcomeParent />} />
