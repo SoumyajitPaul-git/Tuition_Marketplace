@@ -22,7 +22,7 @@ export default function OTPVerification() {
       const res = await axios.post("/api/auth/otp/verify", { email, otp });
       alert(res.data.message);
       localStorage.removeItem("otp_email");
-      navigate("/profile/basic");
+      navigate("/profile/creation");
     } catch (err) {
       alert(err.response?.data?.message || "Verification failed");
       setOtp("");

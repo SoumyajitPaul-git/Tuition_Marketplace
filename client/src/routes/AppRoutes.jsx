@@ -6,7 +6,7 @@ import SignUp from "../pages/SignUp";
 import OTPVerification from "../pages/OTPVerification";
 import BasicInfo from "../pages/TeacherProfileCreation/BasicInfo";
 import Discover from "../pages/Discover";
-
+import NotFound from "../pages/NotFound";
 import ProfileCreation from "../pages/TeacherProfileCreation/ProfileCreation";
 
 import Preference from "../pages/TeacherProfileCreation/Preference";
@@ -33,9 +33,8 @@ export default function AppRoutes() {
       <Route path="/discover" element={<Discover />} />
       <Route path="/profile/creation" element={<ProfileCreation />} />
 
-      <Route path="/profile/basic" element={<BasicInfo />} />
-      <Route path="/profile/preference" element={<Preference />} />
-      
+      {/* <Route path="/profile/basic" element={<BasicInfo />} />
+      <Route path="/profile/preference" element={<Preference />} /> */}
 
       {/* <Route path="/welcome-teacher" element={<WelcomeTeacher />} />
       <Route path="/welcome-parent" element={<WelcomeParent />} />
@@ -45,6 +44,8 @@ export default function AppRoutes() {
       <Route path="/profile/summary" element={<StepSummary />} />
       <Route path="/profile/review" element={<StepReview />} />
       <Route path="/delivery" element={<DeliveryConfirmation />} /> */}
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
