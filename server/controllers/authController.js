@@ -140,37 +140,47 @@ exports.resendOTP = async (req, res) => {
 
 // 🔐 SIGNIN
 exports.signin = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
+
+  if (!role) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Role is required" });
+  }
+
+  const collection = role === "teacher" ? "teachers" : "students";
 
   const snapshot = await db
-    .collection("users")
+    .collection(collection)
     .where("email", "==", email)
     .get();
 
-  if (snapshot.empty)
+  if (snapshot.empty) {
     return res.status(404).json({ success: false, message: "User not found" });
+  }
 
   const userDoc = snapshot.docs[0];
   const user = userDoc.data();
 
-  if (user.password !== password)
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
     return res
       .status(401)
       .json({ success: false, message: "Invalid credentials" });
+  }
 
   // Issue JWT
   const token = jwt.sign(
-    { userId: userDoc.id, email: user.email },
+    { userId: userDoc.id, email: user.email, role: user.role },
     JWT_SECRET,
-    {
-      expiresIn: "7d",
-    }
+    { expiresIn: "7d" }
   );
 
   res.status(200).json({
-    success: true, 
+    success: true,
     message: "Signin successful",
     token,
     userId: userDoc.id,
+    role: user.role,
   });
 };
