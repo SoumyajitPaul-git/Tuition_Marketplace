@@ -61,35 +61,39 @@ exports.verifyOTP = async (req, res) => {
   const docRef = db.collection("otp_verifications").doc(email);
   const snapshot = await docRef.get();
 
-  if (!snapshot.exists)
-    return res
-      .status(404)
-      .json({ success: false, message: "No OTP request found" });
+  if (!snapshot.exists) {
+    return res.status(404).json({ success: false, message: "No OTP request found" });
+  }
 
   const data = snapshot.data();
 
-  if (Date.now() > data.expiresAt)
+  if (Date.now() > data.expiresAt) {
     return res.status(410).json({ success: false, message: "OTP expired" });
+  }
 
-  if (data.otp !== otp)
+  if (data.otp !== otp) {
     return res.status(400).json({ success: false, message: "Invalid OTP" });
+  }
 
-  const userRef = await db.collection("users").add({
+  // Pick correct collection based on role
+  const collection = data.role === "teacher" ? "teachers" : "students";
+
+  const userRef = await db.collection(collection).add({
     name: data.name,
     email: data.email,
-    password: data.password,
-    createdAt: Date.now(),
+    password: data.password, // already hashed during signup
+    role: data.role,
+    createdAt: new Date(),
   });
 
+  // Remove OTP record
   await docRef.delete();
 
   // Issue JWT
   const token = jwt.sign(
-    { userId: userRef.id, email: data.email },
+    { userId: userRef.id, email: data.email, role: data.role },
     JWT_SECRET,
-    {
-      expiresIn: "7d",
-    }
+    { expiresIn: "7d" }
   );
 
   res.status(200).json({
@@ -97,41 +101,41 @@ exports.verifyOTP = async (req, res) => {
     message: "OTP verified. Signup complete.",
     token,
     userId: userRef.id,
+    role: data.role,
   });
 };
+
 
 // 🔁 RESEND OTP
 exports.resendOTP = async (req, res) => {
   const { email } = req.body;
 
-  if (!email)
-    return res
-      .status(400)
-      .json({ success: false, message: "Email is required" });
+  if (!email) {
+    return res.status(400).json({ success: false, message: "Email is required" });
+  }
 
   try {
     const docRef = db.collection("otp_verifications").doc(email);
     const snapshot = await docRef.get();
 
-    if (!snapshot.exists)
+    if (!snapshot.exists) {
       return res.status(404).json({
         success: false,
         message: "No OTP request found. Please sign up again.",
       });
+    }
 
     const otp = generateOTP();
 
     await docRef.update({
       otp,
       createdAt: Date.now(),
-      expiresAt: Date.now() + 5 * 60 * 1000,
+      expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes
     });
 
     await sendOTPEmail(email, otp);
 
-    res
-      .status(200)
-      .json({ success: true, message: "OTP resent to your email." });
+    res.status(200).json({ success: true, message: "OTP resent to your email." });
   } catch (err) {
     console.error("Resend OTP error:", err);
     res.status(500).json({ success: false, message: "Failed to resend OTP" });
