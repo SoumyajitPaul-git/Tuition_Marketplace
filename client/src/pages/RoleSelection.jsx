@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
 import HeroText from "../components/HeroText";
+import Button from "../components/Button"
 
 export default function RoleSelection() {
   return (
@@ -10,16 +11,16 @@ export default function RoleSelection() {
       <div className="space-y-8">
         <Link
           to="/discover"
-          className="block w-fit mx-auto bg-blue-100 border border-blue-500 text-blue-700 font-medium py-3 px-4 text-center rounded-lg hover:bg-blue-200 transition"
+          className="block w-fit mx-auto transition"
         >
-          Student / Parent
+          <Button>Student / Parent</Button>
         </Link>
 
         <Link
           to="/signin"
-          className="block w-fit mx-auto bg-green-100 border border-green-500 text-green-700 font-medium py-3 px-4 text-center rounded-lg hover:bg-green-200 transition"
+          // className="block w-fit mx-auto bg-green-100 border border-green-500 text-green-700 font-medium py-3 px-4 text-center rounded-lg hover:bg-green-200 transition"
         >
-          Teacher
+          <Button>Teacher</Button>
         </Link>
       </div>
     </Container>
