@@ -12,6 +12,27 @@ export default function SignIn() {
   const [isValid, setIsValid] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const role = params.get("role"); // "student" or "teacher"
+
+  const handleSubmit = async () => {
+    try {
+      const res = await axios.post("/api/auth/signin", { ...form, role });
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userId", res.data.userId);
+      localStorage.setItem("role", res.data.role);
+
+      navigate(
+        res.data.role === "teacher"
+          ? "/teacher/dashboard"
+          : "/student/dashboard"
+      );
+    } catch (err) {
+      alert(err.response?.data?.message || "Sign in failed");
+    }
+  };
 
   const validators = {
     email: (val) =>
@@ -31,23 +52,7 @@ export default function SignIn() {
     setIsValid(allValid);
   }, [form]);
 
-  const handleSubmit = async () => {
-    try {
-      const res = await axios.post("/api/auth/signin", form);
-
-      // ✅ Save token & userId in localStorage for later use
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userId", res.data.userId);
-
-      alert(res.data.message);
-
-      // ✅ redirect after success
-      navigate("/profile/creation");
-    } catch (err) {
-      alert(err.response?.data?.message || "Sign in failed");
-    }
-  };
-
+  
 
   return (
     <Container>
@@ -63,7 +68,7 @@ export default function SignIn() {
         value={form.email}
         onChange={handleChange}
         validator={validators.email}
-      />
+      /> 
       <Input
         name="password"
         type="password"

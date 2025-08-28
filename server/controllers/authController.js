@@ -1,32 +1,40 @@
 const { db } = require("../firebase/firebaseAdmin");
 const sendOTPEmail = require("../utils/sendOTPEmail");
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require("bcryptjs");
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 const generateOTP = () =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
-// 🚀 SIGNUP — Send OTP
-exports.signup = async (req, res) => {
-  const { name, email, password } = req.body;
 
-  if (!name || !email || !password)
+// Example: add "role" in req.body ("teacher" or "student")
+exports.signup = async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  if (!name || !email || !password || !role) {
     return res
       .status(400)
       .json({ success: false, message: "All fields required" });
+  }
 
+  // Choose collection based on role
+  const collection = role === "teacher" ? "teachers" : "students";
+
+  // Check if user exists
   const existingUser = await db
-    .collection("users")
+    .collection(collection)
     .where("email", "==", email)
     .get();
 
-  if (!existingUser.empty)
+  if (!existingUser.empty) {
     return res
       .status(409)
       .json({ success: false, message: "Email already registered" });
+  }
 
   const otp = generateOTP();
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   await db
     .collection("otp_verifications")
@@ -34,10 +42,11 @@ exports.signup = async (req, res) => {
     .set({
       name,
       email,
-      password,
+      password: hashedPassword, // store hashed password in temp collection
+      role,
       otp,
       createdAt: Date.now(),
-      expiresAt: Date.now() + 5 * 60 * 1000,
+      expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes expiry
     });
 
   await sendOTPEmail(email, otp);
@@ -159,7 +168,7 @@ exports.signin = async (req, res) => {
   );
 
   res.status(200).json({
-    success: true,
+    success: true, 
     message: "Signin successful",
     token,
     userId: userDoc.id,
