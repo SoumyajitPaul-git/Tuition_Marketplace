@@ -3,16 +3,18 @@ import Container from "../components/Container";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import HeroText from "../components/HeroText";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+
 
 export default function SignUp() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [isValid, setIsValid] = useState(false);
 
-
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const role = params.get("role"); // "student" or "teacher"
 
   const validators = {
     name: (val) =>
@@ -36,10 +38,14 @@ export default function SignUp() {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post("/api/auth/signup", form);
+      const res = await axios.post("/api/auth/signup", { ...form, role });
       alert(res.data.message);
-      localStorage.setItem("otp_email", form.email); // Save email
-      navigate("/otp"); // Redirect to OTP page
+
+      // Save email + role for OTP step
+      localStorage.setItem("otp_email", form.email);
+      localStorage.setItem("otp_role", role);
+
+      navigate("/otp");
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed");
     }
@@ -81,7 +87,11 @@ export default function SignUp() {
 
       <p className="text-sm mt-4 text-center">
         Already have an Account?{" "}
-        <Link to="/signin" className="text-primary hover:underline">
+        {/* preserve role when linking back to SignIn */}
+        <Link
+          to={`/signin?role=${role}`}
+          className="text-primary hover:underline"
+        >
           Sign In
         </Link>
       </p>
