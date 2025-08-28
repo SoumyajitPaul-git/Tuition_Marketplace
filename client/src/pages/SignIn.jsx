@@ -3,8 +3,7 @@ import Container from "../components/Container";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import HeroText from "../components/HeroText";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 export default function SignIn() {
@@ -24,11 +23,12 @@ export default function SignIn() {
       localStorage.setItem("userId", res.data.userId);
       localStorage.setItem("role", res.data.role);
 
-      navigate(
-        res.data.role === "teacher"
-          ? "/teacher/dashboard"
-          : "/student/dashboard"
-      );
+      // Redirect based on role
+      if (res.data.role === "teacher") {
+        navigate("/profile/creation"); // or "/teacher/dashboard" if you add it
+      } else {
+        navigate("/discover"); // or "/student/dashboard"
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Sign in failed");
     }
@@ -52,8 +52,6 @@ export default function SignIn() {
     setIsValid(allValid);
   }, [form]);
 
-  
-
   return (
     <Container>
       <HeroText>Welcome Back !!</HeroText>
@@ -68,7 +66,7 @@ export default function SignIn() {
         value={form.email}
         onChange={handleChange}
         validator={validators.email}
-      /> 
+      />
       <Input
         name="password"
         type="password"
@@ -89,8 +87,11 @@ export default function SignIn() {
       </Button>
 
       <p className="text-sm mt-4 text-center">
-        Don’t have an Account?{" "}
-        <Link to="/signup" className="text-primary hover:underline">
+        Don’t have an Account? {/* preserve role in signup link */}
+        <Link
+          to={`/signup?role=${role}`}
+          className="text-primary hover:underline"
+        >
           Sign Up
         </Link>
       </p>
