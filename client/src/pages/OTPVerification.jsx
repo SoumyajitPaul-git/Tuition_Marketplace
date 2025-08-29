@@ -12,6 +12,7 @@ export default function OTPVerification() {
   const navigate = useNavigate();
 
   const email = localStorage.getItem("otp_email");
+  const role = localStorage.getItem("otp_role"); // ✅ get role saved from SignUp
 
   const handleVerify = async () => {
     if (!email) return alert("Email not found. Try signing up again.");
@@ -21,8 +22,19 @@ export default function OTPVerification() {
       setLoading(true);
       const res = await axios.post("/api/auth/otp/verify", { email, otp });
       alert(res.data.message);
+
+      // cleanup
       localStorage.removeItem("otp_email");
-      navigate("/profile/creation");
+      localStorage.removeItem("otp_role");
+
+      // ✅ Redirect based on role
+      if (role === "teacher") {
+        navigate("/profile/creation");
+      } else if (role === "student") {
+        navigate("/discover");
+      } else {
+        navigate("/"); // fallback
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Verification failed");
       setOtp("");
