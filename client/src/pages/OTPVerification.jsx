@@ -12,7 +12,8 @@ export default function OTPVerification() {
   const navigate = useNavigate();
 
   const email = localStorage.getItem("otp_email");
-  const role = localStorage.getItem("otp_role"); // ✅ get role saved from SignUp
+  const role = localStorage.getItem("otp_role");
+  const redirect = localStorage.getItem("post_signup_redirect"); // ✅ keep the protected page
 
   const handleVerify = async () => {
     if (!email) return alert("Email not found. Try signing up again.");
@@ -27,13 +28,20 @@ export default function OTPVerification() {
       localStorage.removeItem("otp_email");
       localStorage.removeItem("otp_role");
 
-      // ✅ Redirect based on role
+      // ✅ handle redirect if exists
+      if (redirect) {
+        localStorage.removeItem("post_signup_redirect");
+        navigate(redirect, { replace: true });
+        return;
+      }
+
+      // fallback: role-based redirect
       if (role === "teacher") {
         navigate("/profile/creation");
       } else if (role === "student") {
         navigate("/discover");
       } else {
-        navigate("/"); // fallback
+        navigate("/");
       }
     } catch (err) {
       alert(err.response?.data?.message || "Verification failed");
