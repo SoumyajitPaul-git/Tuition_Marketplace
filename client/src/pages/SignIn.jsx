@@ -14,6 +14,7 @@ export default function SignIn() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const role = params.get("role"); // "student" or "teacher"
+  const redirect = params.get("redirect"); // where user wanted to go
 
   const handleSubmit = async () => {
     try {
@@ -23,11 +24,17 @@ export default function SignIn() {
       localStorage.setItem("userId", res.data.userId);
       localStorage.setItem("role", res.data.role);
 
-      // Redirect based on role
+      // If redirect param exists → go there
+      if (redirect) {
+        navigate(redirect, { replace: true });
+        return;
+      }
+
+      // Otherwise → role-based redirect
       if (res.data.role === "teacher") {
-        navigate("/profile/creation"); // or "/teacher/dashboard" if you add it
+        navigate("/profile/creation");
       } else {
-        navigate("/discover"); // or "/student/dashboard"
+        navigate("/discover");
       }
     } catch (err) {
       alert(err.response?.data?.message || "Sign in failed");
@@ -87,9 +94,9 @@ export default function SignIn() {
       </Button>
 
       <p className="text-sm mt-4 text-center">
-        Don’t have an Account? {/* preserve role in signup link */}
+        Don’t have an Account?{" "}
         <Link
-          to={`/signup?role=${role}`}
+          to={`/signup?role=${role}${redirect ? `&redirect=${redirect}` : ""}`}
           className="text-primary hover:underline"
         >
           Sign Up
