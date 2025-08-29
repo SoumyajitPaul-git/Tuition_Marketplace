@@ -6,7 +6,6 @@ import HeroText from "../components/HeroText";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
-
 export default function SignUp() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [isValid, setIsValid] = useState(false);
@@ -15,6 +14,7 @@ export default function SignUp() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const role = params.get("role"); // "student" or "teacher"
+  const redirect = params.get("redirect"); // preserve redirect if any
 
   const validators = {
     name: (val) =>
@@ -44,6 +44,7 @@ export default function SignUp() {
       // Save email + role for OTP step
       localStorage.setItem("otp_email", form.email);
       localStorage.setItem("otp_role", role);
+      if (redirect) localStorage.setItem("post_signup_redirect", redirect);
 
       navigate("/otp");
     } catch (err) {
@@ -87,9 +88,8 @@ export default function SignUp() {
 
       <p className="text-sm mt-4 text-center">
         Already have an Account?{" "}
-        {/* preserve role when linking back to SignIn */}
         <Link
-          to={`/signin?role=${role}`}
+          to={`/signin?role=${role}${redirect ? `&redirect=${redirect}` : ""}`}
           className="text-primary hover:underline"
         >
           Sign In
