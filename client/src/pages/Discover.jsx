@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import TeacherList from "../components/TeacherList";
 import Filters from "../components/Filters";
+import HeroText from "../components/HeroText";
+
 
 const Discover = () => {
   const [filters, setFilters] = useState({
@@ -49,7 +51,8 @@ const Discover = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Discover Teachers</h2>
+      {/* <h2 className="text-2xl font-bold mb-4">Discover Teachers</h2> */}
+      <HeroText>Discover Teachers</HeroText>
       <Filters filters={filters} setFilters={setFilters} />
       <TeacherList teachers={filteredTeachers} />
     </div>
