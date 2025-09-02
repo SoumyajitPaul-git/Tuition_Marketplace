@@ -11,7 +11,7 @@ export default function Preference({ onSave, initialData = {} }) {
     achievement: initialData.achievement || "",
     outcome: initialData.outcome || "",
     ...initialData,
-  });
+  }); 
 
   const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false);

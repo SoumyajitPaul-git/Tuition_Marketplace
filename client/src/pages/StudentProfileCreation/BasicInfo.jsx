@@ -13,7 +13,7 @@ export default function BasicInfo({ onSave, initialData = {} }) {
   });
 
   const [errors, setErrors] = useState({});
-
+ 
   const validators = {
     name: (val) => (val.trim() === "" ? "Name is required" : ""),
     introduction: (val) =>

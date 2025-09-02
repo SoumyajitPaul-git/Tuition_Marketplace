@@ -12,7 +12,7 @@ export default function Summary({ profileData = {}, onSubmit }) {
       if (onSubmit) {
         await onSubmit(profileData);
       }
-
+ 
       // Show success message or redirect
       alert("Profile submitted for validation successfully!");
     } catch (error) {

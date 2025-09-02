@@ -11,7 +11,7 @@ export default function UploadDocs({ onSave, initialData = {} }) {
     professionalCertificates: initialData.professionalCertificates || [],
     vocationalCertificates: initialData.vocationalCertificates || [],
     ...initialData,
-  });
+  }); 
 
   const [visibleSections, setVisibleSections] = useState({
     additionalMarksheets: false,

@@ -10,7 +10,7 @@ import BasicInfo from "./BasicInfo";
 import Preference from "./Preference";
 import UploadDocs from "./UploadDocs";
 import Summary from "./Summary";
-
+ 
 export default function ProfileCreation() {
   const [activeStep, setActiveStep] = useState(0);
   const [profileData, setProfileData] = useState({
